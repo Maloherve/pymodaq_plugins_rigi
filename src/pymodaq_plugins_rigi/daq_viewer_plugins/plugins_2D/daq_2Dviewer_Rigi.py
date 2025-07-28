@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import pyautogui
 
+from ...hardware.ScreenshotMaster import ScreenshotMaster
 
 from pymodaq_utils.utils import ThreadCommand
 from pymodaq_data.data import DataToExport
@@ -10,39 +11,7 @@ from pymodaq_gui.parameter import Parameter
 from pymodaq.control_modules.viewer_utility_classes import DAQ_Viewer_base, comon_parameters, main
 from pymodaq.utils.data import DataFromPlugins
 
-class ScreenShotMaster:
-    #  TODO Replace this fake class with the import of the real python wrapper of your instrument
-    pass
-
-# TODO:
-# (1) change the name of the following class to DAQ_0DViewer_TheNameOfYourChoice
-# (2) change the name of this file to daq_0Dviewer_TheNameOfYourChoice ("TheNameOfYourChoice" should be the SAME
-#     for the class name and the file name.)
-# (3) this file should then be put into the right folder, namely IN THE FOLDER OF THE PLUGIN YOU ARE DEVELOPING:
-#     pymodaq_plugins_my_plugin/daq_viewer_plugins/plugins_0D
-
 class DAQ_2DViewer_Rigi(DAQ_Viewer_base):
-    """ Instrument plugin class for a OD viewer.
-    
-    This object inherits all functionalities to communicate with PyMoDAQ’s DAQ_Viewer module through inheritance via
-    DAQ_Viewer_base. It makes a bridge between the DAQ_Viewer module and the Python wrapper of a particular instrument.
-
-    TODO Complete the docstring of your plugin with:
-        * The set of instruments that should be compatible with this instrument plugin.
-        * With which instrument it has actually been tested.
-        * The version of PyMoDAQ during the test.
-        * The version of the operating system.
-        * Installation instructions: what manufacturer’s drivers should be installed to make it run?
-
-    Attributes:
-    -----------
-    controller: object
-        The particular object that allow the communication with the hardware, in general a python wrapper around the
-         hardware library.
-         
-    # TODO add your particular attributes here if any
-
-    """
     params = comon_parameters+[
         {'title':'Region Parameters',
          'name':'region',
@@ -53,50 +22,34 @@ class DAQ_2DViewer_Rigi(DAQ_Viewer_base):
              {'title':'X End', 'name':'x_end', 'type':'int', 'value':1260, 'default':1260 },
              {'title':'Y End', 'name':'y_end', 'type':'int', 'value':960, 'default':960},
              ]},
+        {'title':'Integrate over N', 'name':'integrate', 'type':'led_push', 'value':False, 'default':False},
+        {'title':'N', 'name':'integrate_n', 'type':'int', 'value':100, 'default':100},
         ]
 
 
     def ini_attributes(self):
-        # self.controller: PythonWrapperOfYourInstrument = None
+        region = (self.settings.child('region', 'x_start').value(), 
+                    self.settings.child('region', 'y_start').value(), 
+                    self.settings.child('region', 'x_end').value(), 
+                    self.settings.child('region', 'y_end').value())        
+        
+        self.controller: ScreenshotMaster = ScreenshotMaster(region=region)
 
-        # Define region: (left, top, width, height)
-        # region = (50, 55, 950, 700)
-        self.region = (50, 55, 1260, 960)
 
 
     def commit_settings(self, param: Parameter):
-        """Apply the consequences of a change of value in the detector settings
-
-        Parameters
-        ----------
-        param: Parameter
-            A given parameter (within detector_settings) whose value has been changed by the user
-        """
+        """Apply the consequences of a change of value in the detector settings """
 
         if param.name() == "x_start" or "x_end" or "y_start" or "y_end":
-            self.region = (self.settings.child('region', 'x_start').value(), 
-                           self.settings.child('region', 'y_start').value(), 
-                           self.settings.child('region', 'x_end').value(), 
-                           self.settings.child('region', 'y_end').value())
-            print(self.region)
-        #    self.controller.your_method_to_apply_this_param_change()
+            region = (self.settings.child('region', 'x_start').value(), 
+                self.settings.child('region', 'y_start').value(), 
+                self.settings.child('region', 'x_end').value(), 
+                self.settings.child('region', 'y_end').value())
+            self.controller.set_region(region)
 
 
     def ini_detector(self, controller=None):
-        """Detector communication initialization
-
-        Parameters
-        ----------
-        controller: (object)
-            custom object of a PyMoDAQ plugin (Slave case). None if only one actuator/detector by controller
-            (Master case)
-
-        Returns
-        -------
-        info: str
-        initialized: bool
-            False if initialization failed otherwise True
-        """
+        """Detector communication initialization """
 
         initialized = True
         info = "Rigi Initialized (Not really I can't read the .dll)"
@@ -119,17 +72,19 @@ class DAQ_2DViewer_Rigi(DAQ_Viewer_base):
             others optionals arguments
         """
 
-        screenshot = pyautogui.screenshot(region=self.region)
-        frame = np.array(screenshot)
-        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        N = 1
+        if self.settings.child('integrate').value():
+            N = self.settings.child('integrate_n').value()
 
-        pxls = gray.shape[0] * gray.shape[1]
-        middle_pixel = gray[int(gray.shape[0]/2)][int(gray.shape[1]/2)]
-        intensity = np.sum(gray) / pxls
+        intensity_list = []
+        for i in range(N):
+            print(i)
+            gray, intensity = self.controller.start_a_grab_snap()
+            intensity_list.append(intensity)
 
         data_to_export = []
         data_to_export.append(DataFromPlugins(name='Region', data=np.flip(gray[::2, ::2], axis=0), dim='Data2D', labels=['Region Observed'], do_plot=True, do_save=False))
-        data_to_export.append(DataFromPlugins(name='Intensity', data=intensity, dim='Data0D', labels=["Integrated Intensity"], do_plot=True, do_save=True))
+        data_to_export.append(DataFromPlugins(name='Intensity', data=np.mean(intensity_list), dim='Data0D', labels=["Integrated Intensity"], do_plot=True, do_save=True))
 
         data = DataToExport('Picoscope', data=data_to_export)
 

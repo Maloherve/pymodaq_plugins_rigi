@@ -89,7 +89,7 @@ class DAQ_0DViewer_Rigi(DAQ_Viewer_base):
         initialized: bool
             False if initialization failed otherwise True
         """
-        
+
         initialized = True
         info = "Rigi Initialized (Not really I can't read the .dll)"
         return info, initialized
