@@ -1,7 +1,4 @@
 import numpy as np
-import cv2
-import pyautogui
-
 from ...hardware.ScreenshotMaster import ScreenshotMaster
 
 from pymodaq_utils.utils import ThreadCommand
@@ -10,6 +7,7 @@ from pymodaq_gui.parameter import Parameter
 
 from pymodaq.control_modules.viewer_utility_classes import DAQ_Viewer_base, comon_parameters, main
 from pymodaq.utils.data import DataFromPlugins
+
 
 class DAQ_2DViewer_Rigi(DAQ_Viewer_base):
     params = comon_parameters+[
@@ -78,7 +76,6 @@ class DAQ_2DViewer_Rigi(DAQ_Viewer_base):
 
         intensity_list = []
         for i in range(N):
-            print(i)
             gray, intensity = self.controller.start_a_grab_snap()
             intensity_list.append(intensity)
 

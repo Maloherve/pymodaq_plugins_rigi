@@ -1,28 +1,29 @@
-[features]  # defines the plugin features contained into this plugin
-instruments = false  # true if plugin contains instrument classes (else false, notice the lowercase for toml files)
-extensions = false  # true if plugins contains dashboard extensions
-models = false  # true if plugins contains pid models
-h5exporters = false  # true if plugin contains custom h5 file exporters
-scanners = false  # true if plugin contains custom scan layout (daq_scan extensions)
+[features]
+instruments = false
+extensions = false
+models = false
+h5exporters = false
+scanners = false
 
 [urls]
 package-url = 'https://github.com/Maloherve/pymodaq_plugins_rigi'
 
 [project]
-name = "pymodaq_plugins_rigi" #todo modify template by your plugin short name
-description = 'some word about your plugin'
+name = "pymodaq_plugins_rigi"
+description = 'Not being able to get the data from the THz Rigi Camera, this plugin screenshots the current screen to extract the data from the Labview display'
 dependencies = [
     "pymodaq>=5.0.0",
+    "opencv>=4.12.0",
+    "pyautogui>=0.9.54",
     #todo: list here all dependencies your package may have
 ]
 
 authors = [
-    {name = "Name Surname", email = "myname@test.fr"},
-    #todo: list here all authors of your plugin
+    {name = "Malo Hervé", email = "malo.herve@epfl.ch"},
 ]
+
 maintainers = [
-    {name = "Name Surname", email = "myname@test.fr"},
-    #todo: list here all maintainers of your plugin
+    {name = "Malo Hervé", email = "malo.herve@epfl.ch"},
 ]
 
 # nottodo: leave everything below as is!

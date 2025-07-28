@@ -3,86 +3,40 @@ pymodaq_plugins_rigi
 
 .. the following must be adapted to your developed package, links to pypi, github  description...
 
-.. image:: https://img.shields.io/pypi/v/pymodaq_plugins_template.svg
-   :target: https://pypi.org/project/pymodaq_plugins_template/
-   :alt: Latest Version
+.. .. image:: https://img.shields.io/pypi/v/pymodaq_plugins_template.svg
+..    :target: https://pypi.org/project/pymodaq_plugins_template/
+..    :alt: Latest Version
 
-.. image:: https://readthedocs.org/projects/pymodaq/badge/?version=latest
-   :target: https://pymodaq.readthedocs.io/en/stable/?badge=latest
-   :alt: Documentation Status
+.. .. image:: https://readthedocs.org/projects/pymodaq/badge/?version=latest
+..    :target: https://pymodaq.readthedocs.io/en/stable/?badge=latest
+..    :alt: Documentation Status
 
-.. image:: https://github.com/PyMoDAQ/pymodaq_plugins_template/workflows/Upload%20Python%20Package/badge.svg
-   :target: https://github.com/PyMoDAQ/pymodaq_plugins_template
-   :alt: Publication Status
+.. .. image:: https://github.com/PyMoDAQ/pymodaq_plugins_template/workflows/Upload%20Python%20Package/badge.svg
+..    :target: https://github.com/PyMoDAQ/pymodaq_plugins_template
+..    :alt: Publication Status
 
-.. image:: https://github.com/PyMoDAQ/pymodaq_plugins_template/actions/workflows/Test.yml/badge.svg
-    :target: https://github.com/PyMoDAQ/pymodaq_plugins_template/actions/workflows/Test.yml
+.. .. image:: https://github.com/PyMoDAQ/pymodaq_plugins_template/actions/workflows/Test.yml/badge.svg
+..     :target: https://github.com/PyMoDAQ/pymodaq_plugins_template/actions/workflows/Test.yml
 
 
-Use this template to create a repository on your account and start the development of your own PyMoDAQ plugin!
+The SwissTHz Rigi Camera is a great camera for imaging THz beams.
+However, this camera does not allow direct interfacing via python, making data aquisition complicated.
+This plugin circonvents this by using python to take screenshots of the displayed labview interface to extract the camera data.
 
 
 Authors
 =======
 
-* First Author  (myemail@xxx.org)
-* Other author (myotheremail@xxx.org)
-
-.. if needed use this field
-
-    Contributors
-    ============
-
-    * First Contributor
-    * Other Contributors
-
-.. if needed use this field
-
-  Depending on the plugin type, delete/complete the fields below
-
+* Malo Hervé  (malo.herve@epfl.ch)
 
 Instruments
 ===========
 
-Below is the list of instruments included in this plugin
-
-Actuators
-+++++++++
-
-* **yyy**: control of yyy actuators
-* **xxx**: control of xxx actuators
-
-Viewer0D
-++++++++
-
-* **yyy**: control of yyy 0D detector
-* **xxx**: control of xxx 0D detector
-
-Viewer1D
-++++++++
-
-* **yyy**: control of yyy 1D detector
-* **xxx**: control of xxx 1D detector
-
-
-Viewer2D
-++++++++
-
-* **yyy**: control of yyy 2D detector
-* **xxx**: control of xxx 2D detector
-
-
-PID Models
-==========
-
-
-Extensions
-==========
+The [Rigi Camera](https://www.swissterahertz.com/rigicamera) is needed for imaging the beam, however this plugin may work for any other purpose where extracting visual data from a screen display is needed.
 
 
 Installation instructions
 =========================
 
-* PyMoDAQ’s version.
-* Operating system’s version.
-* What manufacturer’s drivers should be installed to make this plugin run?
+* PyMoDAQ 5.0.18, running with Python v3.11.*.
+* Windows 10/Windows 11
