@@ -1,6 +1,8 @@
 import numpy as np
 from ...hardware.ScreenshotMaster import ScreenshotMaster
 
+print(np.__version__)
+
 from pymodaq_utils.utils import ThreadCommand
 from pymodaq_data.data import DataToExport
 from pymodaq_gui.parameter import Parameter

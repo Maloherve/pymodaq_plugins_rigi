@@ -15,7 +15,6 @@ class ScreenshotMaster:
     ############## My methods
 
     def __init__(self, region=(50, 55, 1260, 960)) -> None:
-        print(region)
         # Define region: (left, top, width, height)
         self.region = region
 
